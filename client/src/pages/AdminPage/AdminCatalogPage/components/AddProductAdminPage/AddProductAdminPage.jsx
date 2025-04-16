@@ -87,13 +87,6 @@ export const AddProductAdminPage = () => {
         onChange={(e) => handleChange("price", e.target.value)}
       />
      
-      {/* <Input
-        width="95%"
-        placeholder="форма"
-        value={productData.form}
-        onChange={(e) => handleChange("form", e.target.value)}
-      /> */}
-     
       <Input
         width="95%"
         placeholder="Категория"

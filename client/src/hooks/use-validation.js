@@ -26,36 +26,6 @@ const useValidation = () => {
         }
         break;
 
-      case "color":
-        if (!value) {
-          errorMessage = "Это поле обязательно.";
-        }
-        break;
-
-      // case "width":
-      //     if (!value) {
-      //         errorMessage = "Это поле обязательно.";
-      //     } else if (isNaN(Number(value)) || Number(value) <= 0) {
-      //         errorMessage = "Должно быть положительным числом.";
-      //     }
-      //     break;
-
-      // case "height":
-      //     if (!value) {
-      //         errorMessage = "Это поле обязательно.";
-      //     } else if (isNaN(Number(value)) || Number(value) <= 0) {
-      //         errorMessage = "Должно быть положительным числом.";
-      //     }
-      //     break;
-
-      // case "length":
-      //     if (!value) {
-      //         errorMessage = "Это поле обязательно.";
-      //     } else if (isNaN(Number(value)) || Number(value) <= 0) {
-      //         errorMessage = "Должно быть положительным числом.";
-      //     }
-      //     break;
-
       case "category":
         if (!value.trim()) {
           errorMessage = "Это поле обязательно.";

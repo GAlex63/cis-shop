@@ -21,8 +21,8 @@ async function login(login, password) {
     throw new Error("Такого пользователя не существует");
   }
 
-  const isPassworMatch = await bcrypt.compare(password, user.password);
-  if (!isPassworMatch) {
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
+  if (!isPasswordMatch) {
     throw new Error("Неверный пароль");
   }
 

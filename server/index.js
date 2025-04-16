@@ -38,39 +38,50 @@ const PORT = process.env.PORT;
 const app = express();
 const cors = require("cors");
 
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());
+// app.use("/api", routers);
 
-app.post("/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
   try {
     const { login, password } = req.body;
     const { user, token } = await register(login, password);
     res
       .cookie("token", token, { httpOnly: true })
-      .send({ error: null, user: mapUser(user) });
+      .json({ error: null, user: mapUser(user) });
   } catch (error) {
     res.status(400).send({ error: error.message || "Unknown error" });
   }
 });
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   try {
     const { login: userLogin, password } = req.body;
     const { user, token } = await login(userLogin, password);
-    res.cookie("token", token, { httpOnly: true });
-    res.send({ error: null, user: mapUser(user) });
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        domain: "localhost",
+        path: "/",
+      })
+      .json({ error: null, user: mapUser(user) });
   } catch (error) {
     res.status(401).send({ error: error.message || "Unknown error" });
   }
 });
 
-app.post("/logout", (req, res) => {
+app.post("/api/logout", (req, res) => {
   res.cookie("token", "", { httpOnly: true });
   res.send({ message: "Вы успешно вышли из аккаунта" });
 });
 
-app.get("/products", async (req, res) => {
+app.get("/api/products", async (req, res) => {
   const { products, lastPage } = await getProducts(
     req.query.search,
     req.query.limit,
@@ -79,7 +90,7 @@ app.get("/products", async (req, res) => {
 
   res.send({ data: { lastPage, products: products.map(mapProduct) } });
 });
-app.get("/products/:id", async (req, res) => {
+app.get("/api/products/:id", async (req, res) => {
   const product = await getProduct(req.params.id);
 
   res.send({ data: mapProduct(product) });
@@ -88,33 +99,33 @@ app.get("/products/:id", async (req, res) => {
 app.use(authenticated);
 //пользователи
 //получение роли
-app.get("/users/roles", async (req, res) => {
+app.get("/api/users/roles", async (req, res) => {
   const roles = getRoles();
 
   res.send({ data: roles });
 });
 // //получение пользователей
-app.get("/users", hasRole([ROLES.ADMIN]), async (req, res) => {
+app.get("/api/users", hasRole([ROLES.ADMIN]), async (req, res) => {
   const users = await getUsers();
 
   res.send({ data: users.map(mapUser) });
 });
 // //редактирование
-app.patch("/users/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
+app.patch("/api/users/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
   const newUser = await updateUser(req.params.id, {
     role_id: req.body.roleId,
   });
   res.send({ data: mapUser(newUser) });
 });
 // //удаление
-app.delete("/users/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
+app.delete("/api/users/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
   await deleteUser(req.params.id);
 
   res.send({ message: "Позьзователь удален", error: null });
 });
 //товары
 //добавление
-app.post("/products", hasRole([ROLES.ADMIN]), async (req, res) => {
+app.post("/api/products", hasRole([ROLES.ADMIN]), async (req, res) => {
   try {
     const product = req.body.product;
 
@@ -129,7 +140,7 @@ app.post("/products", hasRole([ROLES.ADMIN]), async (req, res) => {
   }
 });
 //удаление
-app.delete("/products/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
+app.delete("/api/products/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
   try {
     await deleteProduct(req.params.id);
     res.send({ message: "Товар удален", error: null });
@@ -141,7 +152,7 @@ app.delete("/products/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
   }
 });
 // //редактирование
-app.patch("/products/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
+app.patch("/api/products/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
   try {
     const productId = req.params.id;
     const productData = req.body;
@@ -157,15 +168,13 @@ app.patch("/products/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
     });
   } catch (error) {
     console.error("Ошибка обновления:", error);
-    res
-      .status(500)
-      .send({
-        error: error.message || "Произошла ошибка при обновлении продукта.",
-      });
+    res.status(500).send({
+      error: error.message || "Произошла ошибка при обновлении продукта.",
+    });
   }
 });
 
-app.get("/carts/:userId", async (req, res) => {
+app.get("/api/carts/:userId", async (req, res) => {
   try {
     const userId = req.user.id;
     const { productId } = req.query;
@@ -176,7 +185,7 @@ app.get("/carts/:userId", async (req, res) => {
   }
 });
 // //добавить
-app.post("/cart", async (req, res) => {
+app.post("/api/cart", async (req, res) => {
   try {
     const { productId, count } = req.body;
     if (!productId || !count) {
@@ -192,7 +201,7 @@ app.post("/cart", async (req, res) => {
   }
 });
 // //удалить все
-app.delete("/cart", async (req, res) => {
+app.delete("/api/cart", async (req, res) => {
   try {
     const userId = req.user.id;
 
@@ -208,7 +217,7 @@ app.delete("/cart", async (req, res) => {
   }
 });
 // //удалить один элемент
-app.delete("/carts/:id", async (req, res) => {
+app.delete("/api/carts/:id", async (req, res) => {
   try {
     const userId = req.user.id;
     const productId = req.params.id;
@@ -224,7 +233,7 @@ app.delete("/carts/:id", async (req, res) => {
 });
 //заказы
 //добавление
-app.post("/order", async (req, res) => {
+app.post("/api/order", async (req, res) => {
   try {
     const userId = req.user.id;
     const orderData = req.body;
@@ -236,13 +245,13 @@ app.post("/order", async (req, res) => {
   }
 });
 
-app.delete("/orders/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
+app.delete("/api/orders/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
   await deleteOrder(req.params.id);
 
   res.send({ message: "Заказ удален", error: null });
 });
 
-app.get("/orders", hasRole([ROLES.ADMIN]), async (req, res) => {
+app.get("/api/orders", hasRole([ROLES.ADMIN]), async (req, res) => {
   const orders = await getOrders();
   console.log(orders);
   res.send({ orders: orders.map(mapOrders) });
@@ -256,7 +265,7 @@ const start = async () => {
       .authenticate()
       .then(() => {
         console.log(
-          "Connection to ProductgreSQL has been established successfully."
+          "Connection to PostgreSQL has been established successfully."
         );
       })
       .catch((err) => {

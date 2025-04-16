@@ -65,8 +65,8 @@ export const Authorization = () => {
         dispatch(setUser(user));
         sessionStorage.setItem("userData", JSON.stringify(user));
         Promise.all([
-          request(`/api/carts/${user.id}`, "GET"),
-          request(`/api/favorites/${user.id}`, "GET")
+          request(`/carts/${user.id}`, "GET"),
+          // request(`/favorites/${user.id}`, "GET")
         ])
         .then(([cartResponse, favoritesResponse]) => {
           if (cartResponse.error || favoritesResponse.error) {

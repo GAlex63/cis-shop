@@ -26,7 +26,7 @@ export const CatalogPage = () => {
 
   useEffect(() => {
     request(
-      `/api/products?search=${searchPhrase}&page=${page}&limit=${PAGINATION_LIMIT}`
+      `/products?search=${searchPhrase}&page=${page}&limit=${PAGINATION_LIMIT}`
     ).then(({ data: { products, lastPage } }) => {
       setProducts(products);
       setFilteredProducts(products);

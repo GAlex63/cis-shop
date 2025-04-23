@@ -24,7 +24,7 @@ export const AdminOrdersPage = () => {
     if (!checkAccess([ROLE.ADMIN], userRole)) {
       return;
     }
-    Promise.all([request("/api/orders"), request("/api/users/roles")]).then(
+    Promise.all([request("/orders"), request("/users/roles")]).then(
       ([ordersRes, rolesRes]) => {
         if (ordersRes.error || rolesRes.error) {
           setErrorMessage(ordersRes.error || rolesRes.error);
@@ -40,7 +40,7 @@ export const AdminOrdersPage = () => {
     if (!checkAccess([ROLE.ADMIN], userRole)) {
       return;
     }
-    request(`/api/orders/${id}`, "DELETE").then(() => {
+    request(`/orders/${id}`, "DELETE").then(() => {
       setShouldUpdateOrderList(!shouldUpdateOrderList);
     });
   };

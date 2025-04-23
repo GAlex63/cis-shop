@@ -42,6 +42,7 @@ app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173",
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
   })
 );
 
@@ -54,7 +55,7 @@ app.post("/api/register", async (req, res) => {
     const { login, password } = req.body;
     const { user, token } = await register(login, password);
     res
-      .cookie("token", token, { httpOnly: true })
+      .cookie("token", token, { httpOnly: false })
       .json({ error: null, user: mapUser(user) });
   } catch (error) {
     res.status(400).send({ error: error.message || "Unknown error" });
@@ -66,7 +67,8 @@ app.post("/api/login", async (req, res) => {
     const { user, token } = await login(userLogin, password);
     res
       .cookie("token", token, {
-        httpOnly: true,
+        httpOnly: false,
+        sameSite: "lax",
         domain: "localhost",
         path: "/",
       })
@@ -77,7 +79,11 @@ app.post("/api/login", async (req, res) => {
 });
 
 app.post("/api/logout", (req, res) => {
-  res.cookie("token", "", { httpOnly: true });
+  res.cookie("token", "", {
+    httpOnly: false,
+    sameSite: "lax",
+    path: "/",
+  });
   res.send({ message: "Вы успешно вышли из аккаунта" });
 });
 
@@ -97,34 +103,27 @@ app.get("/api/products/:id", async (req, res) => {
 });
 
 app.use(authenticated);
-//пользователи
-//получение роли
-app.get("/api/users/roles", async (req, res) => {
+app.get("/api/users/ro  les", async (req, res) => {
   const roles = getRoles();
 
   res.send({ data: roles });
 });
-// //получение пользователей
 app.get("/api/users", hasRole([ROLES.ADMIN]), async (req, res) => {
   const users = await getUsers();
 
   res.send({ data: users.map(mapUser) });
 });
-// //редактирование
 app.patch("/api/users/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
   const newUser = await updateUser(req.params.id, {
     role_id: req.body.roleId,
   });
   res.send({ data: mapUser(newUser) });
 });
-// //удаление
 app.delete("/api/users/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
   await deleteUser(req.params.id);
 
   res.send({ message: "Позьзователь удален", error: null });
 });
-//товары
-//добавление
 app.post("/api/products", hasRole([ROLES.ADMIN]), async (req, res) => {
   try {
     const product = req.body.product;
@@ -139,7 +138,6 @@ app.post("/api/products", hasRole([ROLES.ADMIN]), async (req, res) => {
     res.status(400).send({ error: error.message || "Неизвестная ошибка" });
   }
 });
-//удаление
 app.delete("/api/products/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
   try {
     await deleteProduct(req.params.id);
@@ -151,7 +149,6 @@ app.delete("/api/products/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
       .send({ message: "Ошибка при удалении товара", error: error.message });
   }
 });
-// //редактирование
 app.patch("/api/products/:id", hasRole([ROLES.ADMIN]), async (req, res) => {
   try {
     const productId = req.params.id;
@@ -184,7 +181,6 @@ app.get("/api/carts/:userId", async (req, res) => {
     res.status(400).send({ error: error.message || "Неизвестная ошибка" });
   }
 });
-// //добавить
 app.post("/api/cart", async (req, res) => {
   try {
     const { productId, count } = req.body;
@@ -200,7 +196,6 @@ app.post("/api/cart", async (req, res) => {
     res.status(400).send({ error: error.message || "Неизвестная ошибка" });
   }
 });
-// //удалить все
 app.delete("/api/cart", async (req, res) => {
   try {
     const userId = req.user.id;
@@ -216,7 +211,6 @@ app.delete("/api/cart", async (req, res) => {
     res.status(500).send({ error: error.message || "Неизвестная ошибка." });
   }
 });
-// //удалить один элемент
 app.delete("/api/carts/:id", async (req, res) => {
   try {
     const userId = req.user.id;
@@ -231,8 +225,6 @@ app.delete("/api/carts/:id", async (req, res) => {
     res.status(500).send({ error: error.message || "Неизвестная ошибка" });
   }
 });
-//заказы
-//добавление
 app.post("/api/order", async (req, res) => {
   try {
     const userId = req.user.id;

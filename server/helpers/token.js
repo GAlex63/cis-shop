@@ -4,9 +4,9 @@ require("dotenv").config();
 
 module.exports = {
   generate(payload) {
-    return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "30d" });
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "30d" });
   },
   verify(token) {
-    return jwt.verify(token, process.env.SECRET_KEY);
+    return jwt.verify(token, process.env.JWT_SECRET);
   },
 };

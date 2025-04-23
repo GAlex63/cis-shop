@@ -25,7 +25,7 @@ const UserRowContainer = ({
     setSelectedRoleId(Number(target.value));
   };
   const onRoleSave = (userId, newUserRoleId) => {
-    request(`/api/users/${userId}`, "PATCH", { roleId: newUserRoleId})
+    request(`/users/${userId}`, "PATCH", { roleId: newUserRoleId})
     .then(() => {
       setInitialRoleId(newUserRoleId);
     });

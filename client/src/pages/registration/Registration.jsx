@@ -57,23 +57,8 @@ export const Registration = () => {
 
   useResetForm(reset);
 
-  // const onSubmit = async (e) => {
-  //   // e.preventDefault();
-  //   try {
-  //     const data = request('/auth/register', 'POST', {
-  //       login,
-  //       password
-  //     });
-  //     dispatch(setUser(user))
-  //     sessionStorage.setItem('user', JSON.stringify(user));
-  //     navigate('/');
-  //   } catch (error) {
-  //     setServerError(error.message);
-  //   }
-  // };
-
   const onSubmit = ({ login, password }) => {
-    request("/api/register", "POST", { login, password }).then(
+    request("/register", "POST", { login, password }).then(
       ({ error, user }) => {
         if (error) {
           setServerError(` Ошибка запроса:  ${error}`);

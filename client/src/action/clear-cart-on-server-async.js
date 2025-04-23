@@ -3,7 +3,7 @@ import { clearCart } from "./clear-cart";
 
 export const clearCartonServer = (userId) => async (dispatch) => {
   try {
-    const response = await request("/api/cart/", "DELETE", { userId });
+    const response = await request("/cart/", "DELETE", { userId });
     if (response.ok) {
       dispatch(clearCart());
     }

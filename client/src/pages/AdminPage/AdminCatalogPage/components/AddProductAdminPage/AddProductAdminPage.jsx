@@ -26,7 +26,7 @@ export const AddProductAdminPage = () => {
         if (!checkAccess([ROLE.ADMIN], userRole)) {
           return;
         }
-       request("/api/users/roles")
+       request("/users/roles")
        .then(
           (rolesRes) => {
             if (rolesRes.error) {
@@ -48,7 +48,7 @@ export const AddProductAdminPage = () => {
         return;
       }
       try {
-         const response = request('/api/products', 'POST', { product: productData });
+         const response = request('/products', 'POST', { product: productData });
   
         if (response.error) {
           setError(response.error);

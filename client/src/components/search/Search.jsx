@@ -10,7 +10,7 @@ export const Search = ({ searchPhrase, onChange }) => {
     <SearchContainer>
       <Input
         value={searchPhrase}
-        placeholder="Поиск по заголовкам..."
+        placeholder="Поиск по наименованию..."
         onChange={onChange}
       />
       <Icon inactive={true} icon={SearchIcon} size="21px" />

@@ -12,9 +12,7 @@ import {
   CLOSE_MODAL,
   openModal,
   removeProductAsync,
-  // RESET_PRODUCT_DATA,
 } from "../../../action";
-// import { useMatch } from "react-router-dom";
 
 
 export const AdminCatalogPage = () => {
@@ -23,8 +21,8 @@ export const AdminCatalogPage = () => {
   const [lastPage, setLastPage] = useState(2);
   const [searchPhrase, setSearchPhrase] = useState("");
   const [shouldSearch, setShouldSearch] = useState(false);
-  // const [shouldUpdateProductList, setShouldUpdateProductList] = useState(false);
 
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
@@ -35,7 +33,7 @@ export const AdminCatalogPage = () => {
       return;
     }
     request(
-      `/api/products?search=${searchPhrase}&page=${page}&limit=${PAGINATION_LIMIT}`
+      `/products?search=${searchPhrase}&page=${page}&limit=${PAGINATION_LIMIT}`
     ).then(({ data: { products, lastPage } }) => {
       setProducts(products);
       setLastPage(lastPage);

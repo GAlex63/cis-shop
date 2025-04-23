@@ -1,22 +1,3 @@
-// export * from "./action-type";
-// export * from "./close-modal";
-// export * from "./load-product-async";
-// export * from "./logout";
-// export * from "./open-modal";
-// export * from "./set-product-data";
-// export * from "./set-user";
-// export * from "./save-product-async"
-// export * from "./remove-product-async"
-// export * from "./reset-product-data"
-// export * from "./set-cart";
-// export * from "./remove-from-cart";
-// export * from "./clear-cart";
-// export * from "./load-cart-async"
-// export * from "./add-new-order-async"
-// export * from "./clear-cart-on-server-async.js"
-// export * from "./remove-from-cart-async"
-// export * from "./add-product-to-cart-async"
-
 export * from "./action-type";
 export * from "./add-new-order-async";
 export * from "./add-product-to-cart-async";

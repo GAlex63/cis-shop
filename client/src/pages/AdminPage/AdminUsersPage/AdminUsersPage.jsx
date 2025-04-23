@@ -23,7 +23,7 @@ export const AdminUsersPage = () => {
     if (!checkAccess([ROLE.ADMIN], userRole)) {
       return;
     }
-    Promise.all([request("/api/users"), request("/api/users/roles")]).then(
+    Promise.all([request("/users"), request("/users/roles")]).then(
       ([usersRes, rolesRes]) => {
         if (usersRes.error || rolesRes.error) {
           setErrorMessage(usersRes.error || rolesRes.error);
@@ -39,7 +39,7 @@ export const AdminUsersPage = () => {
     if (!checkAccess([ROLE.ADMIN], userRole)) {
       return;
     }
-    request(`/api/users/${userId}`, "DELETE").then(() => {
+    request(`/users/${userId}`, "DELETE").then(() => {
       setShouldUpdateUserList(!shouldUpdateUserList);
     });
   };

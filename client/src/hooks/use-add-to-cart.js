@@ -17,7 +17,7 @@ export const useAddToCart = (userRole) => {
       setCart(updatedCart);
     } else if (userRole === ROLE.USER) {
       try {
-        const response = await request("/api/cart", "POST", {
+        const response = await request("/cart", "POST", {
           productId,
           userId,
         });

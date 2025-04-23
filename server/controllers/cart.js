@@ -77,7 +77,7 @@ async function getCarts(userId) {
       {
         model: Product,
         as: "product",
-        attributes: ["id", "title", "price", "img_url", "color", "form"],
+        attributes: ["id", "title", "price", "img_url"],
       },
     ],
   });

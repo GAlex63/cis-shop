@@ -4,7 +4,7 @@ import { setCart } from "./set-cart";
 export const addProductToCart =
   (productId, count, userId) => async (dispatch) => {
     try {
-      const response = await request("/api/cart", "POST", {
+      const response = await request("/cart", "POST", {
         productId,
         count,
         userId,

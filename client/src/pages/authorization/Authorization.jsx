@@ -55,7 +55,7 @@ export const Authorization = () => {
   useResetForm(reset);
 
   const onSubmit = ({ login, password }) => {
-    request("/api/login", "POST", { login, password })
+    request("/login", "POST", { login, password })
       .then(({ error, user }) => {
         if (error) {
           setServerError(`Ошибка запроса: ${error}`);
@@ -66,12 +66,12 @@ export const Authorization = () => {
         sessionStorage.setItem("userData", JSON.stringify(user));
         Promise.all([
           request(`/carts/${user.id}`, "GET"),
-          // request(`/favorites/${user.id}`, "GET")
         ])
-        .then(([cartResponse, favoritesResponse]) => {
-          if (cartResponse.error || favoritesResponse.error) {
+        // .then(request => console.log('ответ от /api/cart', response.data))
+        .then(([cartResponse]) => {
+          if (cartResponse.error) {
             
-            console.error(`Ошибка загрузки данных: ${cartResponse.error || favoritesResponse.error}`);
+            console.error(`Ошибка загрузки данных: ${cartResponse.error}`);
             return;
           }
           dispatch(setCart(cartResponse));
@@ -79,7 +79,7 @@ export const Authorization = () => {
         })
           .catch((fetchError) => {
             console.error(
-              "Ошибка при загрузке данных корзины или избранного:",
+              "Ошибка при загрузке данных корзины:",
               fetchError
             );
           });

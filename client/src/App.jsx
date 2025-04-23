@@ -28,7 +28,6 @@ export const App = () => {
   useLayoutEffect(() => {
     const currentUserDataJSON = sessionStorage.getItem("userData");
     const currentCartDataJSON = sessionStorage.getItem("cartData");
-    // const currentFavoritesDataJSON = sessionStorage.getItem("favoritesData");
     if (!currentUserDataJSON) {
       return;
     }

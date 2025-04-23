@@ -8,8 +8,6 @@ import {
   ModalOverlay,
   OrderSummary,
   SectionContact,
-  // TabButton,
-  // TabsContainer,
 } from "./style";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserId } from "../../../../selectors";

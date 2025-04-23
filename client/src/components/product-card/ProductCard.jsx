@@ -26,9 +26,6 @@ export const ProductCard = ({ product, imgUrl }) => {
           <Image src={image} alt={product.title} />
           <TitleGroup>
             <h3>{product.title}</h3>
-            <h3>
-              {product.form} {product.color}
-            </h3>
           </TitleGroup>
         </CardItem>
 

@@ -1,1 +1,4 @@
-export const checkAccess = (access, userRole) => access.includes(userRole)
+export const checkAccess = (access, userRole) => {
+  console.log(userRole);
+  access.includes(userRole);
+};

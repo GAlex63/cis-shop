@@ -1,36 +1,57 @@
-require("dotenv").config();
+// app.js
+// const express = require("express");
+// const cors = require("cors");
+// const app = express();
+// require("dotenv").config();
+
+// const authRoutes = require("./routes/authRoutes");
+// const productRoutes = require("./routes/productRoutes");
+// const cartRoutes = require("./routes/cartRoutes");
+// const orderRoutes = require("./routes/orderRoutes");
+// const userRoutes = require("./routes/userRoutes");
+
+// app.use(cors());
+// app.use(express.json());
+
+// app.use("/auth", authRoutes);
+// app.use("/products", productRoutes);
+// app.use("/cart", cartRoutes);
+// app.use("/orders", orderRoutes);
+// app.use("/users", userRoutes);
+
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
 const express = require("express");
 const cors = require("cors");
-const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
-const { errorHandler } = require("./middleware/errorHandler");
-
+const { sequelize } = require("./models");
 const app = express();
+require("dotenv").config();
 
-// Middleware
-app.use(helmet());
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-  })
-);
+const authRoutes = require("./routes/authRoutes");
+const productRoutes = require("./routes/productRoutes");
+const cartRoutes = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+const userRoutes = require("./routes/userRoutes");
+
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
-app.use(limiter);
+app.use("/auth", authRoutes);
+app.use("/products", productRoutes);
+app.use("/cart", cartRoutes);
+app.use("/orders", orderRoutes);
+app.use("/users", userRoutes);
 
-// Routes
-app.use("/api/auth", require("./routes/auth"));
-app.use("/api/users", require("./routes/user"));
-app.use("/api/products", require("./routes/products"));
+const PORT = process.env.PORT || 3000;
 
-// Error handling
-app.use(errorHandler);
+sequelize
+  .sync({ alter: true })
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  })
+  .catch((error) => {
+    console.error("Unable to connect to the database:", error);
+  });
 
 module.exports = app;

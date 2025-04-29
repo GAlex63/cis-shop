@@ -1,32 +1,25 @@
-const { generateToken } = require("../helpers/token");
-const authService = require("../services/authService");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const userModel = require("../models/user");
 
-const login = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    const user = await authService.authenticateUser(email, password);
-
-    const token = generateToken({ userId: user.id });
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-    });
-
-    res.json({
-      success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
+exports.register = async (req, res) => {
+  const { email, password } = req.body;
+  const hash = await bcrypt.hash(password, 10);
+  const user = await userModel.createUser(email, hash);
+  res.status(201).json(user);
 };
 
-module.exports = {
-  login,
-  // Другие методы...
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await userModel.getUserByEmail(email);
+  if (!user) return res.status(401).json({ message: "Invalid credentials" });
+
+  const isMatch = await bcrypt.compare(password, user.password_hash);
+  if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+
+  const token = jwt.sign(
+    { id: user.id, role: user.role },
+    process.env.JWT_SECRET
+  );
+  res.json({ token });
 };

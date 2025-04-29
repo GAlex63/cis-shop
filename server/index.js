@@ -103,7 +103,7 @@ app.get("/api/products/:id", async (req, res) => {
 });
 
 app.use(authenticated);
-app.get("/api/users/ro  les", async (req, res) => {
+app.get("/api/users/roles", async (req, res) => {
   const roles = getRoles();
 
   res.send({ data: roles });

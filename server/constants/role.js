@@ -7,3 +7,11 @@ module.exports = {
   USER,
   GUEST,
 };
+
+// const ROLES = {
+//   ADMIN: 0,
+//   USER: 1,
+//   GUEST: 2,
+// };
+
+// module.exports = ROLES;

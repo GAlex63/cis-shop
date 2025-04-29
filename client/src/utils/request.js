@@ -15,7 +15,7 @@ export const request = async (url, method = "GET", body) => {
   });
 
   const responseData = await response.json().catch(() => ({}));
-  console.log("Ответ от /api", responseData);
+  console.log("Ответ от /api", response.status, responseData);
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));

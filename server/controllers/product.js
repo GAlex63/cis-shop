@@ -6,9 +6,10 @@ async function addProduct(product) {
   try {
     const newProduct = await Product.create({
       img_url: product.img_url,
-      category: product.category,
+      category_id: product.category_id,
       title: product.title,
       price: product.price,
+      description: product.description || "",
     });
 
     return newProduct;

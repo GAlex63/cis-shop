@@ -20,22 +20,30 @@ export const AddProductAdminPage = () => {
       category: "",
       desc: "",
     });
+    const [categories, setCategories] = useState([]);
   
 
     useEffect(() => {
         if (!checkAccess([ROLE.ADMIN], userRole)) {
           return;
         }
-       request("/users/roles")
-       .then(
-          (rolesRes) => {
-            if (rolesRes.error) {
-              setError(rolesRes.error);
-              return;
-            }
-            setRoles(rolesRes.data);
-          }
-        );
+
+        request("/categories")
+    .then((res) => {
+      if (res.error) return setError(res.error);
+      setCategories(res.data);
+    })
+    .catch(() => setError("Не удалось загрузить категории"));
+      //  request("/users/roles")
+      //  .then(
+      //     (rolesRes) => {
+      //       if (rolesRes.error) {
+      //         setError(rolesRes.error);
+      //         return;
+      //       }
+      //       setRoles(rolesRes.data);
+      //     }
+      //   );
       }, [userRole]);
   
     const handleChange = (field, value) => {
@@ -87,12 +95,22 @@ export const AddProductAdminPage = () => {
         onChange={(e) => handleChange("price", e.target.value)}
       />
      
-      <Input
+     <select
+  value={productData.category}
+  onChange={(e) => handleChange("category", e.target.value)}
+>
+  <option value="">Выбери категорию</option>
+  {categories.map((cat) => (
+    <option key={cat.id} value={cat.id}>{cat.name}</option>
+  ))}
+</select>
+
+      {/* <Input
         width="95%"
         placeholder="Категория"
         value={productData.category}
         onChange={(e) => handleChange("category", e.target.value)}
-      />  
+      />   */}
      
       <Input
         width="95%"

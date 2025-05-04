@@ -9,7 +9,13 @@ async function register(login, password) {
   }
   const passwordHash = await bcrypt.hash(password, 10);
   const user = await User.create({ login, password: passwordHash });
-  const token = generate({ id: user.id });
+  const token = generate({ id: user.id, role_id: user.role_id });
+
+  //   console.log("Создан токен с payload при регистрации", {
+  //     id: user.id,
+  //     role_id: user.role_id,
+  //   }
+  // );
 
   return { user, token };
 }
@@ -26,7 +32,11 @@ async function login(login, password) {
     throw new Error("Неверный пароль");
   }
 
-  const token = generate({ id: user.id });
+  const token = generate({ id: user.id, role_id: user.role_id });
+  // console.log("Создан токен с payload при входе", {
+  //   id: user.id,
+  //   role_id: user.role_id,
+  // });
   return { token, user };
 }
 

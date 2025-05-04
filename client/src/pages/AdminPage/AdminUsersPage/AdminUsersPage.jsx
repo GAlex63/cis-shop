@@ -20,6 +20,7 @@ export const AdminUsersPage = () => {
 
 
   useEffect(() => {
+
     if (!checkAccess([ROLE.ADMIN], userRole)) {
       return;
     }

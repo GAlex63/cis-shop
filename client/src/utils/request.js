@@ -15,11 +15,9 @@ export const request = async (url, method = "GET", body) => {
   });
 
   const responseData = await response.json().catch(() => ({}));
-  console.log("Ответ от /api", response.status, responseData);
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || "Request failed");
+    throw new Error(error.message || "Ошибка запроса");
   }
 
   return responseData;

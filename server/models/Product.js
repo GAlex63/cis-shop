@@ -16,8 +16,12 @@ const Product = sequelize.define(
       type: DataTypes.STRING,
       validate: {
         isValidUrl(value) {
-          if (!validator.isURL(value)) {
-            throw new Error("Image should be a valid URL");
+          const isValid = validator.isURL(value, {
+            require_protocol: true,
+            host_whitelist: ["localhost"],
+          });
+          if (!isValid) {
+            throw new Error("Изображение имеет некорректный URL");
           }
         },
       },
@@ -26,9 +30,13 @@ const Product = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    category: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    category_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "categories",
+        key: "id",
+      },
     },
     price: {
       type: DataTypes.INTEGER,
@@ -38,6 +46,10 @@ const Product = sequelize.define(
       type: DataTypes.DATE,
       defaultValue: Sequelize.NOW,
       allowNull: false,
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
   },
   {

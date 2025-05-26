@@ -17,7 +17,8 @@ export const request = async (url, method = "GET", body) => {
   const responseData = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(error.message || "Ошибка запроса");
+    const errorMessage = responseData?.message || "Ошибка запроса";
+    throw new Error(errorMessage);
   }
 
   return responseData;

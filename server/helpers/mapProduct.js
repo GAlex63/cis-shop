@@ -3,9 +3,10 @@ module.exports = function (product) {
     id: product.id,
     title: product.title,
     imgUrl: product.img_url,
-    category: product.category,
+    category_id: product.category?.id,
+    category_name: product.category?.name,
     price: product.price,
+    description: product.description,
     createdAt: product.created_at,
-    publishedAt: product.createdAt,
   };
 };

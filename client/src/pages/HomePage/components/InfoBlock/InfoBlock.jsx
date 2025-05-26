@@ -1,6 +1,6 @@
 import { Info, InfoBlocksContainer } from "./style";
 
-export const InfoBlocks = () => {
+export const InfoBlock = () => {
   return (
     <InfoBlocksContainer>
       <Info>

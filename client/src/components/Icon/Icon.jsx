@@ -1,17 +1,21 @@
 import styled from 'styled-components';
 
-
 const IconWrapper = styled.div`
-  width: ${(props) => props.size || '30px'};
-  height: ${(props) => props.size || '40px'};
-  color: ${(props) => props.color || 'black'};
-  margin: ${(props) => props.margin || '0 auto'};
-  border: ${(props) => props.border || '1 px solid'};
-  border-radius: ${(props) => props.borderRadius || '2px'};
-  
+  width: ${({ size = '30px' }) => size};
+  height: ${({ size = '30px' }) => size};
+  color: ${({ color = 'black' }) => color};
+  margin: ${({ margin = '0 auto' }) => margin};
+  border: ${({ border = 'none' }) => border};
+  border-radius: ${({ borderRadius = '4px' }) => borderRadius};
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: color 0.3s ease, border 0.3s ease;
 
   &:hover {
-    color: ${(props) => props.hoverColor || 'gray'};
+    color: ${({ hoverColor = 'gray' }) => hoverColor};
+    cursor: pointer;
   }
 
   svg {
@@ -20,10 +24,28 @@ const IconWrapper = styled.div`
   }
 `;
 
-
-export const Icon = ({ icon: IconComponent, size, color, hoverColor, margin, onClick, border, borderRadius }) => {
+export const Icon = ({
+  icon: IconComponent,
+  size,
+  color,
+  hoverColor,
+  margin,
+  onClick,
+  border,
+  borderRadius,
+  ...props
+}) => {
   return (
-    <IconWrapper size={size} color={color} hoverColor={hoverColor} margin={ margin} onClick={onClick} border={border} borderRadius={borderRadius}>
+    <IconWrapper
+      size={size}
+      color={color}
+      hoverColor={hoverColor}
+      margin={margin}
+      border={border}
+      borderRadius={borderRadius}
+      onClick={onClick}
+      {...props}
+    >
       <IconComponent />
     </IconWrapper>
   );

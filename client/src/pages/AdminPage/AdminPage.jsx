@@ -10,6 +10,7 @@ export const AdminPage = () => {
         <AdminItem onClick={() => navigate("/users")}>
           Все пользователи
         </AdminItem>
+        <AdminItem onClick={() => navigate("/categories")}>Все категории</AdminItem>
         <AdminItem onClick={() => navigate("/orders")}>Все заказы</AdminItem>
       </AdminItemsSection>
     </AdminPageContainer>

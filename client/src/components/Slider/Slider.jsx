@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Slide, SliderContainer } from "./style";
+import { Slide, SlideImage, SliderContainer } from "./style";
 
 export const CustomSlider = ({ images, width, height }) => {
   const settings = {
@@ -21,11 +21,7 @@ export const CustomSlider = ({ images, width, height }) => {
       <Slider {...settings}>
         {images.map((image, index) => (
           <Slide key={index}>
-            <img
-              src={image.src}
-              alt={image.alt || `Slide ${index + 1}`}
-              style={{ height }}
-            />
+            <SlideImage src={image.src} alt={image.alt || `Slide ${index + 1}`} height={height} />
           </Slide>
         ))}
       </Slider>

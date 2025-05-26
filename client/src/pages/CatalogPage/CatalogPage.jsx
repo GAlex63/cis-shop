@@ -23,16 +23,35 @@ export const CatalogPage = () => {
   const [lastPage, setLastPage] = useState(2);
   const [searchPhrase, setSearchPhrase] = useState("");
   const [shouldSearch, setShouldSearch] = useState(false);
+  const [categories, setCategories] = useState([])
 
   useEffect(() => {
     request(
       `/products?search=${searchPhrase}&page=${page}&limit=${PAGINATION_LIMIT}`
     ).then(({ data: { products, lastPage } }) => {
+      console.log('products', products)
       setProducts(products);
       setFilteredProducts(products);
       setLastPage(lastPage);
     });
   }, [page, shouldSearch]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/categories')
+        if (!response.ok) {
+          throw new Error('Ошибка получения категорий')
+        }
+        const data = await response.json()
+        // console.log(data)
+        setCategories(data.data)
+      } catch (error) {
+        console.error('Ошибка:', error)
+      }
+    }
+    fetchCategories()
+  }, [])
 
   const startDelayedSearch = useMemo(() => debounce(setShouldSearch, 2000), []);
 
@@ -41,16 +60,18 @@ export const CatalogPage = () => {
     startDelayedSearch(!shouldSearch);
   };
 
-  const filterByCategory = (category) => {
-    if (category === "all") {
+  const filterByCategory = (categoryId) => {
+    if (categoryId === "all") {
       setFilteredProducts(products);
     } else {
       const filtered = products.filter(
-        (product) => product.category === category
+        (product) => String(product.category_id) === String(categoryId)
       );
       setFilteredProducts(filtered);
     }
   };
+
+  
 
   return (
     <CatalogContainer>
@@ -59,15 +80,11 @@ export const CatalogPage = () => {
           <SidebarItem onClick={() => filterByCategory("all")}>
             Все товары
           </SidebarItem>
-          <SidebarItem onClick={() => filterByCategory("radiators")}>
-            Радиаторы
-          </SidebarItem>
-          <SidebarItem onClick={() => filterByCategory("boilers")}>
-            Водонагреватели
-          </SidebarItem>
-          <SidebarItem onClick={() => filterByCategory("valves")}>
-            Запорная арматура
-          </SidebarItem>
+          {categories.map((category) => (
+            <SidebarItem key={category.id} onClick={() => filterByCategory(category.id)}>
+              {category.name}
+            </SidebarItem>
+          ))}
         </ul>
       </Sidebar>
       <MainContent>

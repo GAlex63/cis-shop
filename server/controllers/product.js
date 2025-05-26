@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const sequelize = require("../db");
 const Product = require("../models/Product");
+const Category = require("../models/Category");
 
 async function addProduct(product) {
   try {
@@ -62,6 +63,13 @@ async function getProducts(search = "", limit = 10, page = 1) {
       limit: limit,
       offset: offset,
       order: [["created_at", "DESC"]],
+      include: [
+        {
+          model: Category,
+          as: "category",
+          attributes: ["id", "name"],
+        },
+      ],
     });
 
     return {
@@ -76,7 +84,15 @@ async function getProducts(search = "", limit = 10, page = 1) {
 
 async function getProduct(id) {
   try {
-    const product = await Product.findByPk(id);
+    const product = await Product.findByPk(id, {
+      include: [
+        {
+          model: Category,
+          as: "category",
+          attribute: ["id", "name"],
+        },
+      ],
+    });
 
     if (!product) {
       return null;

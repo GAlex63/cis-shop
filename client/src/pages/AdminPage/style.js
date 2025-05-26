@@ -37,3 +37,27 @@ export const AdminItem = styled.div`
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
   }
 `;
+
+/* padding: 15px 20px;
+  margin: 10px 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  background-color: var(--color-primary-blue);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #6e5360;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    background-color: #9b848f;
+    transform: translateY(0);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  }
+`; */

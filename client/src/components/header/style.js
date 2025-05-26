@@ -1,45 +1,86 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export const HeaderContainer = styled.header`
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  background-color: var(--main-bg-color);
+  border-bottom: 2px solid var(--color-primary-blue);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
   position: fixed;
   top: 0;
   left: 0;
-  right: 19px;
-  height: 100px;
-  padding: 0 20px;
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
-  color: black;
-  box-sizing: border-box;
-  background-color: var(--main-bg-color);
-  z-index: 10;
-  border-bottom: 2px solid var(--color-primary-blue);
-`;
-export const CenterSection = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background-color: var(--main-bg-color);
-`;
-export const LogoBlock = styled.div`
-  /* width: 10%; */
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-`;
-export const LogoImg = styled.img`
-  width: auto;
-  height: 70px;
+  z-index: 100;
 `;
 
-export const LinksBlock = styled.div`
+export const CenterSection = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  text-align: center;
-  width: 50%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 100px;
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 16px;
+  }
+`;
+
+export const LogoBlock = styled.div`
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+`;
+
+export const LogoImg = styled.img`
+  height: 60px;
+`;
+
+export const LinksBlock = styled.nav`
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex: 1; /* Позволяет центровать */
+
+  a {
+    text-decoration: none;
+    font-size: 16px;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: var(--color-accent);
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+    gap: 16px;
+  }
+`;
+
+export const ServiceBlock = styled.div`
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: 20px;
+
+  @media (max-width: 768px) {
+    margin-top: 8px;
+    justify-content: center;
+    width: 100%;
+  }
+`;
+
+export const UserName = styled.div`
+  font-weight: bold;
+  font-size: 16px;
 `;
 
 export const IconsBlock = styled.div`
@@ -47,7 +88,5 @@ export const IconsBlock = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 0;
-  margin: 0 auto;
-  /* flex: 0 0 5%; */
-  width: 30%;
+  margin: 0;
 `;

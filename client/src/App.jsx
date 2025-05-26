@@ -18,9 +18,11 @@ import {
   AdminOrdersPage,
   AdminUsersPage,
   AdminCatalogPage,
+  AdminCategoryPage,
 } from "./pages/AdminPage";
 import { ProductCartForm } from "./pages/ProductCardPage/component/product-form/product-form";
 import { AddProductAdminPage } from "./pages/AdminPage/AdminCatalogPage/components/AddProductAdminPage/AddProductAdminPage";
+import { PageWrapper } from "./components/layout/PageWrapper";
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -55,6 +57,7 @@ export const App = () => {
     <>
       <GlobalStyle />
       <AppContainer>
+        {/* <PageWrapper> */}
         <Header />
         <Page>
           <Routes>
@@ -70,6 +73,7 @@ export const App = () => {
             <Route path="/orders" element={<AdminOrdersPage />} />
             <Route path="/catalog" element={<AdminCatalogPage />} />
             <Route path="/catalog/add" element={<AddProductAdminPage />} />
+            <Route path='/categories' element={<AdminCategoryPage />} />
 
             <Route path="/catalog/:id" element={<ProductCartForm />} />
 
@@ -79,6 +83,7 @@ export const App = () => {
         </Page>
         <Footer />
         <Modal />
+        {/* </PageWrapper> */}
       </AppContainer>
     </>
   );

@@ -25,14 +25,14 @@ export const CartPage = () => {
   const [loading, setLoading] = useState(false);
   const userId = useSelector(selectUserId);
   const dispatch = useDispatch();
-  const carts = useSelector((state) => state.cart?.cart || []);
+  const cart = useSelector((state) => state.cart?.cart || []);
 
 
   useEffect(() => {
     dispatch(loadCartAsync(userId)).catch((error) => {
       console.error("Ошибка при загрузке данных из корзины", error);
     });
-  }, [dispatch]);
+  }, [dispatch, userId]);
 
   const handleRemoveAll = () => {
     try {
@@ -46,22 +46,30 @@ export const CartPage = () => {
   if (loading) return <div>Загрузка избранного...</div>;
 
   const getTotalAmount = () => {
-    return carts.reduce((total, item) => {
+    return cart.reduce((total, item) => {
       return total + item.count * item.product.price;
     }, 0);
   };
 
+
   const handleUpdateQuantity = (id, newCount) => {
-    setCart((prevCartProducts) => {
-      return prevCartProducts.map((item) =>
-        item.id === id ? { ...item, count: newCount } : item
-      );
-    });
+    const updatedCart = cart.map((item) =>
+      item.product.id === id ? { ...item, count: newCount } : item
+    );
+    dispatch(setCart(updatedCart));
   };
+
+  // const handleUpdateQuantity = (id, newCount) => {
+  //   setCart((prevCartProducts) => {
+  //     return prevCartProducts.map((item) =>
+  //       item.id === id ? { ...item, count: newCount } : item
+  //     );
+  //   });
+  // };
 
   const handleRemoveProduct = async (productId) => {
     try {
-      await dispatch(removeFromCartAsync(productId));
+      dispatch(removeFromCartAsync(productId));
       setCart((prevProducts) =>
         prevProducts.filter((product) => product.id !== productId)
       );
@@ -88,10 +96,10 @@ export const CartPage = () => {
           <h2>Корзина</h2>
           <ClearButton onClick={handleRemoveAll}>Очистить корзину</ClearButton>
         </CartTitle>
-        {carts.length === 0 ? (
+        {cart.length === 0 ? (
           <p>Ваша корзина пуста</p>
         ) : (
-          carts.map((cart) => {
+          cart.map((cart) => {
             const { product } = cart;
             return (
               <CartItem
@@ -105,7 +113,7 @@ export const CartPage = () => {
           })
         )}
       </CartItemsContainer>
-      {carts.length > 0 ? (
+      {cart.length > 0 ? (
         <CartSummary>
           <h2>Сумма заказа</h2>
           <h3>{getTotalAmount()}</h3>

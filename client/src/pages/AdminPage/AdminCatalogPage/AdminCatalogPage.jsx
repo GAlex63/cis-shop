@@ -59,7 +59,7 @@ export const AdminCatalogPage = () => {
         text: " Удалить продукт?",
         onConfirm: () => {
           dispatch(removeProductAsync(id)).then(() => {
-            navigate("/catalog");
+            setShouldSearch((prev) => !prev);
           });
           dispatch(CLOSE_MODAL);
         },
@@ -72,11 +72,11 @@ export const AdminCatalogPage = () => {
     <AdminCatalogContainer>
       <AllProductGroup>
         <ActionGroup>
-          <Button onClick={handleAdd} width="150px">
+          <Search onChange={onSearch} searchPhrase={searchPhrase} />
+          <Button onClick={handleAdd} width="150px" height="48px">
             {" "}
             Добавить товар{" "}
           </Button>
-          <Search onChange={onSearch} searchPhrase={searchPhrase} />
         </ActionGroup>
 
         {products.length > 0 ? (

@@ -8,28 +8,28 @@ export const Container = styled.div`
   padding: 20px;
 `;
 
-export const CartTitle = styled.h2`
-display: flex;
-justify-content: space-between;
+export const CartTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
   font-size: 24px;
   margin-bottom: 20px;
 `;
 
 export const CartItemsContainer = styled.div`
-flex: 1;
-margin-right: 20px;
-max-width: 80%;
+  flex: 1;
+  margin-right: 20px;
+  max-width: 80%;
 `;
 export const ClearButton = styled.button`
-border: none;
-background-color: #fff;
-color: gray;
-font-weight: bold;
+  border: none;
+  background-color: #fff;
+  color: gray;
+  font-weight: bold;
 
-&:hover{
-  cursor: pointer;
-}
-`
+  &:hover {
+    cursor: pointer;
+  }
+`;
 
 export const ErrorDiv = styled.div`
   font-size: 18px;
@@ -37,7 +37,7 @@ export const ErrorDiv = styled.div`
 `;
 
 export const CartSummary = styled.div`
-   flex: 2;
+  flex: 2;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -48,7 +48,7 @@ export const CartSummary = styled.div`
   border-radius: 8px;
   background-color: #f9f9f9;
   position: sticky;
-  top: 20%; 
+  top: 20%;
   height: fit-content;
   z-index: 1;
 `;

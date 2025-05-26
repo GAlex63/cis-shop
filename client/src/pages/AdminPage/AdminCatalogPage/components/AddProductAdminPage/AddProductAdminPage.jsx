@@ -1,26 +1,29 @@
 import { useNavigate } from "react-router-dom";
-import { Button, Input, PrivateContent } from "../../../../../components";
+import { Button, Input, PrivateContent, H2 } from "../../../../../components";
 import { request } from "../../../../../utils/request";
-import { AddProductAdminContainer, FormField } from "./style"
+import { AddProductAdminContainer, FormField, Select, ErrorMessage, ImagePreview, DropZone, FormWrapper, ButtonWrapper } from "./style"
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUserRole } from "../../../../../selectors";
 import { checkAccess } from "../../../../../utils";
 import { ROLE } from "../../../../../constans";
+
+
 export const AddProductAdminPage = () => {
     const navigate = useNavigate(); 
     const userRole = useSelector(selectUserRole);
   
-  const [roles, setRoles] = useState([])
+  // const [roles, setRoles] = useState([])
     const [error, setError] = useState(null);
+    const [categories, setCategories] = useState([]);
+    const [imagePreview, setImagePreview] = useState(null)
     const [productData, setProductData] = useState({
       img_url: "",
       title: "",
       price: "",
-      category: "",
-      desc: "",
+      category_id: "",
+      description: "",
     });
-    const [categories, setCategories] = useState([]);
   
 
     useEffect(() => {
@@ -34,21 +37,32 @@ export const AddProductAdminPage = () => {
       setCategories(res.data);
     })
     .catch(() => setError("Не удалось загрузить категории"));
-      //  request("/users/roles")
-      //  .then(
-      //     (rolesRes) => {
-      //       if (rolesRes.error) {
-      //         setError(rolesRes.error);
-      //         return;
-      //       }
-      //       setRoles(rolesRes.data);
-      //     }
-      //   );
       }, [userRole]);
   
     const handleChange = (field, value) => {
       setProductData((prev) => ({ ...prev, [field]: value }));
     };
+
+    const handleImageDrop = (e) => {
+      e.preventDefault()
+      const file = e.dataTransfer.files[0]
+      readFile(file)
+    }
+
+    const handleImageSelect = (e) => {
+      const file = e.targer.file[0]
+      readFile(file)
+    }
+
+    const readFile = (file) => {
+      if (!file || !file.type.startWith('image/')) return;
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setProductData((prev) => ({ ...prev, img_url: reader.result }))
+        setImagePreview(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
   
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -56,7 +70,7 @@ export const AddProductAdminPage = () => {
         return;
       }
       try {
-         const response = request('/products', 'POST', { product: productData });
+         const response = await request('/products', 'POST', { product: productData });
   
         if (response.error) {
           setError(response.error);
@@ -70,62 +84,76 @@ export const AddProductAdminPage = () => {
     };
   
     return (
-        
       <AddProductAdminContainer>
-          <PrivateContent access={[ROLE.ADMIN]} serverError={error}></PrivateContent>
+          <PrivateContent access={[ROLE.ADMIN]} serverError={error}>
       <form onSubmit={handleSubmit}>
-      {error && <div className="error">{error}</div>}
-      
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+      <FormField>
+
+      <H2>Форма добавления нового товара</H2>
       <Input
         width="95%"
         placeholder="Название"
         value={productData.title}
         onChange={(e) => handleChange("title", e.target.value)}
       />
+      </FormField>
+
+      <FormField>
+        <DropZone onDrop={handleImageDrop}
+        onDragOver={(e) => e.preventDefault()}
+        >
+        <p>Перетащите изображение сюда или фыберите файл</p>
+        <input type="file" accept='image/' onChange={handleImageSelect} />
+        </DropZone>
+        {imagePreview && <imagePreview src={imagePreview} alt='Предпросмотр'/>}
+      </FormField>
+
+      {/* <FormField>
       <Input
         width="95%"
         placeholder="Картинка"
         value={productData.img_url}
         onChange={(e) => handleChange("img_url", e.target.value)}
       />
+      </FormField> */}
+
+      <FormField>
       <Input
         width="95%"
         placeholder="Цена"
         value={productData.price}
         onChange={(e) => handleChange("price", e.target.value)}
       />
+      </FormField>
      
-     <select
-  value={productData.category}
-  onChange={(e) => handleChange("category", e.target.value)}
->
-  <option value="">Выбери категорию</option>
-  {categories.map((cat) => (
-    <option key={cat.id} value={cat.id}>{cat.name}</option>
-  ))}
-</select>
+     <FormField>
+     <Select
+        value={productData.category_id}
+        onChange={(e) => handleChange("category_id", e.target.value)}
+      >
+        <option value="">Выбери категорию</option>
+        {categories.map((cat) => (
+          <option key={cat.id} value={cat.id}>{cat.name}</option>
+        ))}
+      </Select>
+      </FormField>  
 
-      {/* <Input
-        width="95%"
-        placeholder="Категория"
-        value={productData.category}
-        onChange={(e) => handleChange("category", e.target.value)}
-      />   */}
-     
+      <FormField>   
       <Input
         width="95%"
         placeholder="Описание"
-        value={productData.desc}
-        onChange={(e) => handleChange("desc", e.target.value)}
+        value={productData.description}
+        onChange={(e) => handleChange("description", e.target.value)}
       />
-     
-      
+      </FormField>
+        <ButtonWrapper>
       <Button type="submit">Добавить</Button>
+        </ButtonWrapper>
       {error}
     </form>
-  
-
-      </AddProductAdminContainer>
+    </PrivateContent>
+    </AddProductAdminContainer>
     
   );
 }

@@ -12,7 +12,8 @@ const router = express.Router();
 
 router.use(authenticated);
 
-router.get("/:userId", async (req, res) => {
+router.get("/", async (req, res) => {
+  // router.get("/:userId", async (req, res) => {
   try {
     const userId = req.user.id;
     const { productId } = req.query;

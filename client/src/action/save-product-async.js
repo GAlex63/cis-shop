@@ -1,10 +1,10 @@
 import { request } from "../utils/request";
 import { setProductData } from "./set-product-data";
 
-export const saveProductAsync = (id, newProductData) => (dispatch) => {
+export const saveProductAsync = (id, newProductData) => async (dispatch) => {
   const saveRequest = id
-    ? request(`/products/${id}`, "PATCH", newProductData)
-    : request("/products", "POST", newProductData);
+    ? await request(`/products/${id}`, "PATCH", newProductData)
+    : await request("/products", "POST", newProductData);
 
   return saveRequest
     .then((updatedProduct) => {

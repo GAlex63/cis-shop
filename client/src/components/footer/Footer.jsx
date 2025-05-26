@@ -4,7 +4,7 @@ import { ScInstagram } from "@styled-icons/evil/ScInstagram";
 import { ScTelegram } from "@styled-icons/evil/ScTelegram";
 import { ScYoutube } from "@styled-icons/evil/ScYoutube";
 import { ScOdnoklassniki } from "@styled-icons/evil/ScOdnoklassniki";
-import { Icon } from "../Icon/Icon";
+import { Icon } from "../icon/Icon";
 import { ContactInfo, Copyright, FooterContainer, FooterTop, SocialIcons } from "./style";
 
 

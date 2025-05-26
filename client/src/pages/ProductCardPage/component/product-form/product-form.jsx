@@ -1,96 +1,72 @@
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { loadProductAsync, saveProductAsync } from "../../../../action";
 import {
   ProductCardPageContainer,
   ProductPageMainContainer,
 } from "../../style";
-import { useDispatch} from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, Input } from "../../../../components";
+import { ButtonWrapper } from "../../../AdminPage/AdminCatalogPage/components/AddProductAdminPage/style";
 
-export const ProductCartForm = ({
-  product: { id, imgUrl, title, desc, price },
-}) => {
-  const [imgUrlvalue, setImgUrlvalue] = useState(imgUrl);
-  const [titlevalue, setTitlevalue] = useState(title);
-  const [pricevalue, setPricevalue] = useState(price);
-  const [descvalue, setDescvalue] = useState(desc);
-
+export const ProductCartForm = () => {
+  const [imgUrlValue, setImgUrlValue] = useState("");
+  const [titleValue, setTitleValue] = useState("");
+  const [priceValue, setPriceValue] = useState("");
+  const [descValue, setDescValue] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { id } = useParams();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setIsLoading(true);
     dispatch(loadProductAsync(id))
-      .then((data) => {
-        console.log("Данные загружены:", data);
-        setImgUrlvalue(imgUrl);
-        setTitlevalue(title);
-        setPricevalue(price);
-        setDescvalue(desc);
-        setIsLoading(false);
+      .then((productData) => {
+        if (!productData) throw new Error("Нет данных продукта");
+        setImgUrlValue(productData.imgUrl);
+        setTitleValue(productData.title);
+        setPriceValue(productData.price);
+        setDescValue(productData.desc);
       })
       .catch((err) => {
         console.error("Ошибка при загрузке данных:", err);
-        setError(err.message);
-        setIsLoading(false);
-      });
-  }, [id, dispatch, imgUrl, title, price, desc]);
-
-  const onSave = () => {
-    dispatch(
-      saveProductAsync(id, {
-        imgUrl: imgUrlvalue,
-        title: titlevalue,
-        desc: descvalue,
-        price: pricevalue,
+        setError(err.message || "Ошибка загрузки");
       })
-    ).then((updatedProduct) => {
-      console.log(updatedProduct);
-      navigate(`/products/${id}`);
-    });
-  };
-  const onImgChange = ({ target }) => setImgUrlvalue(target.value);
-  const onTitleChange = ({ target }) => setTitlevalue(target.value);
-  const onDescChange = ({ target }) => setDescvalue(target.value);
-  const onPriceChange = ({ target }) => setPricevalue(target.value);
+      .finally(() => setIsLoading(false));
+  }, [id, dispatch]);
 
-  if (isLoading) return <p>Loading...</p>;
-  
-  if (error) return <p>{error}</p>;
+  const onSave = async () => {
+    try {
+        dispatch(
+        saveProductAsync(id, {
+          imgUrl: imgUrlValue,
+          title: titleValue,
+          desc: descValue,
+          price: priceValue,
+        })
+      );
+      navigate(`/products/${id}`);
+    } catch (err) {
+      setError("Ошибка при сохранении товара");
+    }
+  };
+
+  if (isLoading) return <p>Загрузка...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
+
   return (
     <ProductCardPageContainer>
       <ProductPageMainContainer>
-        <Input
-          width="95%"
-          placeholder="картинка"
-          value={imgUrlvalue}
-          onChange={onImgChange}
-        />
-
-        <Input
-          width="95%"
-          placeholder="Заголовок"
-          value={titlevalue}
-          onChange={onTitleChange}
-        />
-        <Input
-          width="95%"
-          placeholder="Описание"
-          value={descvalue}
-          onChange={onDescChange}
-        />
-
-        <Input
-          width="95%"
-          placeholder="Цена"
-          value={pricevalue}
-          onChange={onPriceChange}
-        />
-
-        <Button onClick={onSave}> Сохранить изменения</Button>
+        <Input width="95%" placeholder="Ссылка на изображение" value={imgUrlValue} onChange={(e) => setImgUrlValue(e.target.value)} />
+        <Input width="95%" placeholder="Название" value={titleValue} onChange={(e) => setTitleValue(e.target.value)} />
+        <Input width="95%" placeholder="Описание" value={descValue} onChange={(e) => setDescValue(e.target.value)} />
+        <Input width="95%" placeholder="Цена" value={priceValue} onChange={(e) => setPriceValue(e.target.value)} />
+        <ButtonWrapper>
+        <Button onClick={onSave}>Сохранить изменения</Button>
+        </ButtonWrapper>
       </ProductPageMainContainer>
     </ProductCardPageContainer>
   );

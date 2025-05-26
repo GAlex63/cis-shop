@@ -47,10 +47,18 @@ const seedProducts = async () => {
   ];
 
   for (const product of products) {
-    await Product.findOrCreate({
+    const [item, created] = await Product.findOrCreate({
       where: { title: product.title },
       defaults: product,
     });
+
+    if (!created && !item.category_id) {
+      await item.update({ category_id: product.category_id });
+    }
+    // await Product.findOrCreate({
+    //   where: { title: product.title },
+    //   defaults: product,
+    // });
   }
 
   console.log("Тестовые товары добавлены");

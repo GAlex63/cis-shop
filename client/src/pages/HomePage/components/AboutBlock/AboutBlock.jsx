@@ -19,7 +19,7 @@ export const AboutBlock = () => {
         </h3>
       </AboutBlockItem>
       <AboutBlockItem>
-        <CustomSlider images={aboutImageArray} width="100%" height="500px" />
+        <CustomSlider images={aboutImageArray} width="100%" height="300px" />
       </AboutBlockItem>
     </AboutBlockContainer>
   );

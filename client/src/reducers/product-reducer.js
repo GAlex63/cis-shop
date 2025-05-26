@@ -3,8 +3,9 @@ import { ACTION_TYPE } from "../action";
 const initialProductState = {
   id: "",
   title: "",
-  img_url: "",
-  category: "",
+  imgUrl: "",
+  category_id: "",
+  category_name: "",
   price: 0,
   desc: "",
   createdAt: "",

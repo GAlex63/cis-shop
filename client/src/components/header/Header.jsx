@@ -5,9 +5,9 @@ import {
   CenterSection,
   LogoImg,
   LinksBlock,
-  LogoBlock,
-} from "./style.js";
-import { ControlPanel } from "./components/control-panel/Control-panel.jsx";
+  LogoBlock
+} from "./style";
+import { ControlPanelMenu } from "./components/control-panel-menu/ControlPanelMenu";
 
 export const Header = () => (
   <HeaderContainer>
@@ -19,20 +19,13 @@ export const Header = () => (
       </LogoBlock>
 
       <LinksBlock>
-        <a href="#" title="О компании">
-          О компании
-        </a>
-        <a href="/products" title="Каталог">
-          Каталог
-        </a>
-        <a href="#" title="Оплата и доставка">
-          Оплата и доставка
-        </a>
-        <a href="#" title="Офисы продаж">
-          Офисы продаж
-        </a>
+        <Link to="#">О компании</Link>
+        <Link to="/products">Каталог</Link>
+        <Link to="#">Оплата и доставка</Link>
+        <Link to="#">Офисы продаж</Link>
       </LinksBlock>
-      <ControlPanel />
+
+      <ControlPanelMenu />
     </CenterSection>
   </HeaderContainer>
 );

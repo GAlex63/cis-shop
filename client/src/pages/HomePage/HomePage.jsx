@@ -1,4 +1,4 @@
-import { InfoBlocks } from "./components/InfoBlock/InfoBlock";
+import { InfoBlock } from "./components/InfoBlock/InfoBlock";
 import { AboutBlock } from "./components/AboutBlock/AboutBlock";
 import { Title } from "../../components";
 import { ROLE } from "../../constans";
@@ -17,20 +17,15 @@ export const HomePage = () => {
 
   return (
     <HomePageContainer>
-      {isAdmin ? (
-        <AdminPage />
-      ) : (
-        <>
-          <MainBlock />
-          <TitleBlock>
-            <Title>
-              Работаем с 2000 года. 
-            </Title>
-          </TitleBlock>
-          <AboutBlock />
-          {/* <InfoBlocks /> */}
-        </>
-      )}
-    </HomePageContainer>
+        <MainBlock />
+        <TitleBlock>
+          <Title>
+            Работаем с 2000 года. 
+          </Title>
+        </TitleBlock>
+        <AboutBlock />
+        {/* <InfoBlock /> */}
+        {isAdmin && <AdminPage />}
+  </HomePageContainer>
   );
 };

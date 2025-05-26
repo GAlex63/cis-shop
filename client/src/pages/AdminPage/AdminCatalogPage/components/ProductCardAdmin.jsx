@@ -1,8 +1,7 @@
 import { ButtonGroup } from "@mui/material";
-import { ActionButton, CardContainer, ProductDetail, ProductImage, ProductInfo, ProductTitle } from "./style";
-import { Link, useNavigate } from "react-router-dom";
-// import { useSelector } from "react-redux";
-// import { selectProduct } from "../../../../selectors";
+import { CardContainer, ProductDetail, ProductImage, ProductInfo, ProductTitle } from "./style";
+import { useNavigate } from "react-router-dom";
+import { Button } from "../../../../components"; 
 
 
 const ProductCardAdmin = ({ product, onEdit, onDelete }) => {
@@ -24,19 +23,15 @@ const handleClick = () => {
           <strong>ID товара:</strong> {product.id}
         </ProductDetail>
         <ProductDetail>
-          <strong>Категория:</strong> {product.category}
+          <strong>Категория:</strong> {product.category_name}
         </ProductDetail>
         <ProductDetail>
           <strong>Цена:</strong> {product.price} руб.
         </ProductDetail>
       </ProductInfo>
       <ButtonGroup>
-        <ActionButton onClick={() => onEdit(product.id)}>
-          Редактировать
-        </ActionButton>
-        <ActionButton delete onClick={() => onDelete(product.id)}>
-          Удалить
-        </ActionButton>
+        <Button onClick={() => onEdit(id)} variant="edit" height="36px" >Редактировать</Button>
+        <Button onClick={() => onDelete(id)} variant="danger" height="36px" style={{ marginLeft: "12px"}}>Удалить</Button>
       </ButtonGroup>
     </CardContainer>
   );

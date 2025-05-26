@@ -9,7 +9,7 @@ import { useResetForm } from "../../hooks";
 import { setUser, setCart } from "../../action";
 import { selectUserRole } from "../../selectors";
 import { ROLE } from "../../constans/role";
-import { AuthorizationContainer, StyledLink } from "./style";
+import { AuthorizationContainer, FormWrapper, StyledLink, Title } from "./style";
 import { request } from "../../utils/request";
 
 const authFormSchema = yup.object().shape({
@@ -65,17 +65,17 @@ export const Authorization = () => {
         dispatch(setUser(user));
         sessionStorage.setItem("userData", JSON.stringify(user));
         Promise.all([
-          request(`/carts/${user.id}`, "GET"),
+          // request(`/cart/${user.id}`, "GET"),
+          request(`/cart`, "GET"),
         ])
-        // .then(request => console.log('ответ от /api/cart', response.data))
         .then(([cartResponse]) => {
           if (cartResponse.error) {
             
             console.error(`Ошибка загрузки данных: ${cartResponse.error}`);
             return;
           }
-          dispatch(setCart(cartResponse));
-          sessionStorage.setItem("cartData", JSON.stringify(cartResponse));
+          dispatch(setCart(cartResponse.cart));
+          sessionStorage.setItem("cartData", JSON.stringify(cartResponse.cart));
         })
           .catch((fetchError) => {
             console.error(
@@ -97,8 +97,8 @@ export const Authorization = () => {
   }
   return (
     <AuthorizationContainer>
-      <H2>Авторизация</H2>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <FormWrapper onSubmit={handleSubmit(onSubmit)}>
+      <Title>Авторизация</Title>
         <Input
           type="text"
           placeholder="Логин..."
@@ -113,14 +113,14 @@ export const Authorization = () => {
             onChange: () => setServerError(null),
           })}
         />
-        <Button type="submit" disabled={!!formError}>
+        <Button type="submit" width="100%" disabled={!!formError}>
           Авторизоваться
         </Button>
         {errorMessage && <AuthFormError>{errorMessage}</AuthFormError>}
         <StyledLink>
           <Link to="/register">Регистрация </Link>
         </StyledLink>
-      </form>
+      </FormWrapper>
     </AuthorizationContainer>
   );
 };
